@@ -24,3 +24,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Configuration file for an Azure DevOps extension 
+# for Visual Studio Code, which provides support 
+# for deploying apps to Azure App Service.
+settings.json
