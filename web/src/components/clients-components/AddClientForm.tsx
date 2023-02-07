@@ -1,6 +1,6 @@
 import FormFields from "./FormFields";
 import { FormEvent, ChangeEvent, useState } from 'react';
-import { maskCpf, maskTelephone } from "../../utils/Masks";
+import { maskCpf, maskTelephone } from "../../utils/masks";
 import { AddClientFormPropsInterface, ClientInterface } from "../../interfaces/ClientsPageInterfaces";
 import validate, { isEmpty } from "../../utils/validation";
 import api from "../../axiosInstance";
