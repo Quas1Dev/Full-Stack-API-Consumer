@@ -12,4 +12,6 @@ I used Vite to bootsrap a ReactJS + Typescript web app. Pure CSS was used to sty
 
 For the backend, I set a NodeJS server built with the Express package. This server is used to communicate to a MongoDB database, which is a task accomplished using the mongoose package.
 
-The front-end is deployed in Netlify, and the backend is on fly.
+The front-end is deployed in Netlify, and the backend is on Azure.
+
+Acesse a aplicação
