@@ -11,12 +11,17 @@ function useCheckAndRedirectUser(user: string) {
     useEffect(() => {
         const checkAndRedirect = async () => {
             if (user) {
-                const response = await api.get<UserInterface>("/confirmUser/" + user);
+                try {
+                    const response = await api.get<UserInterface>("/confirmUser/" + user);
 
-                const data = response.data;
-                if (data.token) navigate("/randomuser");
+                    const data = response.data;
+                    if (data.token) navigate("/randomuser");
+                } catch (err: any) {
+                    console.log(err.message);
+                }
             }
         }
+
         checkAndRedirect();
     }, [user]);
 }
