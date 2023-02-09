@@ -7,22 +7,24 @@ async function confirmLogin(req: Request, resp: Response) {
     const { user, password } = req.body;
     const secretKey: string | undefined = process.env.SECRET_KEY;
 
-    if (!secretKey) return resp.status(404).json({
-        err: "Couldn't find key to encode message",
+    if (!secretKey) return resp.status(500).json({
+        err: "Couldn't find secret key for encoding message.",
     })
 
     try {
         const userExist = await ModelForUser.exists({ user, password });
-        if (userExist) {
-            const { _id } = userExist;
-            // Creates a JSON Web Token *1
-            const token = jwt.sign({ _id }, secretKey);
-            return resp.json({ token: token });
-        } else {
+        
+        if (!userExist) {
             return resp.status(401).json({
                 err: "User doesn't exist.",
             });
         }
+
+        const { _id } = userExist;
+        // Creates a JSON Web Token *1
+        const token = jwt.sign({ _id }, secretKey);
+        return resp.json({ token: token });
+
     } catch (err: any) {
         return resp.status(500).json({
             err: "Something went wrong whilst checking the provided credentials.",
