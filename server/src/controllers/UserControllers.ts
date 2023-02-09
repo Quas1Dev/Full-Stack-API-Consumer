@@ -19,8 +19,8 @@ async function confirmLogin(req: Request, resp: Response) {
         const token = jwt.sign({ _id }, secretKey);
         return resp.json({ token: token });
     } else {
-        return resp.status(404).json({
-            err: "User doesn't exist."
+        return resp.status(401).json({
+            err: "User doesn't exist.",
         });
     }
 }
