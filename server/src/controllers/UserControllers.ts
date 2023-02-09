@@ -11,17 +11,23 @@ async function confirmLogin(req: Request, resp: Response) {
         err: "Couldn't find key to encode message",
     })
 
-    const userExist = await ModelForUser.exists({ user, password });
-
-    if (userExist) {
-        const { _id } = userExist;
-        // Creates a JSON Web Token *1
-        const token = jwt.sign({ _id }, secretKey);
-        return resp.json({ token: token });
-    } else {
-        return resp.status(401).json({
-            err: "User doesn't exist.",
-        });
+    try {
+        const userExist = await ModelForUser.exists({ user, password });
+        if (userExist) {
+            const { _id } = userExist;
+            // Creates a JSON Web Token *1
+            const token = jwt.sign({ _id }, secretKey);
+            return resp.json({ token: token });
+        } else {
+            return resp.status(401).json({
+                err: "User doesn't exist.",
+            });
+        }
+    } catch (err: any) {
+        return resp.status(500).json({
+            err: "Something went wrong whilst checking the provided credentials.",
+            message: err.message,
+        })
     }
 }
 
@@ -38,7 +44,7 @@ async function confirmUser(req: Request, resp: Response) {
         // Verify the token
         const decoded = jwt.verify(token, secretKey);
         const userExist = await ModelForUser.exists({ _id: decoded });
-        return userExist ? resp.json({ token }) : resp.json({ token : ""});
+        return userExist ? resp.json({ token }) : resp.json({ token: "" });
     } catch (err: any) {
         return resp.status(500).json({
             err: "Couldn't confirm user.",
