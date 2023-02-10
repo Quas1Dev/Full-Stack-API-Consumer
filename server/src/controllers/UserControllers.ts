@@ -1,35 +1,49 @@
-import ModelForUser from "../models/UsersData";
 import { Request, Response } from 'express';
+import bcrypt from 'bcrypt';
+
+import ModelForUser from "../models/UsersData"
 import jwt from 'jsonwebtoken';
 
-// Check user credentials
+/* NOTE - *<number> refers to some dev comment and is located bellow source code */
+
+// Confirmação das credenciais do usuário
 async function confirmLogin(req: Request, resp: Response) {
     const { user, password } = req.body;
     const secretKey: string | undefined = process.env.SECRET_KEY;
 
+    // A chave secreta deve existir no ambiente
     if (!secretKey) return resp.status(500).json({
-        err: "Couldn't find secret key for encoding message.",
-    })
-
+        err: "Erro interno! Tente novamente mais tarde.",
+        message: "Chave secreta para encriptar o identificador do usuário não foi encontrada."
+    });
+    
     try {
-        const userExist = await ModelForUser.exists({ user, password });
-        
-        if (!userExist) {
+        // Verifica se o nome de usuário foi fornecido
+        const userRecord = await ModelForUser.findOne({ user });
+        if (!userRecord) {
             return resp.status(401).json({
-                err: "User doesn't exist.",
+                err: "Usuário não encontrado!",
             });
         }
 
-        const { _id } = userExist;
-        // Creates a JSON Web Token *1
-        const token = jwt.sign({ _id }, secretKey);
-        return resp.json({ token: token });
+        // Verifica se a senha fornecida está correta
+        const passwordMatch = await bcrypt.compare(password, userRecord.password);
+        if (!passwordMatch) {
+            return resp.status(401).json({
+                err: "Usuário não encontrado!",
+            });
+        }
+
+        // Gera e envia o token em vez de enviar o ID do usuário *1
+        const token = jwt.sign({ _id: userRecord._id }, secretKey);
+        return resp.json({ token });
 
     } catch (err: any) {
+        // Erro ao verificar o nome de usuário ou senha
         return resp.status(500).json({
-            err: "Something went wrong whilst checking the provided credentials.",
+            err: "Algo deu errado. Tente novamente!",
             message: err.message,
-        })
+        });
     }
 }
 
@@ -38,8 +52,10 @@ async function confirmUser(req: Request, resp: Response) {
     const { token } = req.params;
     const secretKey: string | undefined = process.env.SECRET_KEY;
 
+    // Secrete key to decode token must exist
     if (!secretKey) return resp.status(404).json({
-        err: "No secrete key defined in the environment!",
+        err: "Erro interno! Tente novamente mais tarde.",
+        message: "Chave para encriptar o identificador do usuário não foi encontrada."
     });
 
     try {
@@ -49,7 +65,7 @@ async function confirmUser(req: Request, resp: Response) {
         return userExist ? resp.json({ token }) : resp.json({ token: "" });
     } catch (err: any) {
         return resp.status(500).json({
-            err: "Couldn't confirm user.",
+            err: "Não foi confirmar o usuário!",
             message: err.message,
         });
     }
