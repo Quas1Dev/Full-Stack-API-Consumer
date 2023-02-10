@@ -26,7 +26,7 @@ export default function AddClientForm({ setIsOpen, fetchClients }: AddClientForm
 
         if (!empty && isValid) {
             const addUser = async () => {
-                const response = await api.post("/add", clientFormData);
+                const response = await api.post("/clients", clientFormData);
                 setIsOpen(false);
                 fetchClients()
             }

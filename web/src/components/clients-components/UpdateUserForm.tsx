@@ -20,7 +20,7 @@ export default function UpdateUserForm({ fetchClients, setIsUpdOpen, clientToUpd
         console.log("Submitting");
         const updateClient = async () => {
             console.log("id: ",clientData._id)
-            await api.put("/users/" + clientData._id, {
+            await api.put("/clients/" + clientData._id, {
                 ...clientData
             });
 

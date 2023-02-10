@@ -12,7 +12,7 @@ function useCheckAndRedirectUser(user: string) {
         const checkAndRedirect = async () => {
             if (user) {
                 try {
-                    const response = await api.get<UserInterface>("/confirmUser/" + user);
+                    const response = await api.get<UserInterface>("/users/" + user);
 
                     const data = response.data;
                     if (data.token) navigate("/randomuser");
@@ -54,7 +54,7 @@ function Login() {
         e.preventDefault();
 
         const checkUser = async () => {
-            const response = await api.post<UserInterface>("/confirmLogin", form);
+            const response = await api.post<UserInterface>("/users", form);
 
             const { token } = response.data;
 
