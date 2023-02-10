@@ -27,7 +27,7 @@ export default function Clients() {
     });
 
     const fetchClients = async () => {
-        const response = await api.get("/users");
+        const response = await api.get("/clients");
         setClients(response.data);
     }
 
