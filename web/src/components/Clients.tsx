@@ -27,7 +27,7 @@ export default function Clients() {
     });
 
     const fetchClients = async () => {
-        const response = await api.get("/read");
+        const response = await api.get("/users");
         setClients(response.data);
     }
 
@@ -44,7 +44,7 @@ export default function Clients() {
     // Delete the user on confirmation
     function handleClickConfirm() {
         const deleteClient = async () => {
-            await api.delete("/delete/" + userToDelete);
+            await api.delete("/clients/" + userToDelete);
             fetchClients();
         }
         deleteClient();

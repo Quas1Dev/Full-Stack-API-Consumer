@@ -24,7 +24,7 @@ function App() {
       if (!storedUser) return;
 
       try {
-        const response = await api.get<UserInterface>("/confirmUser/" + storedUser);
+        const response = await api.get<UserInterface>("/users/" + storedUser);
         if (response.data.token) setUser(storedUser);
       } catch (err: any) {
         console.log(err.message);
